@@ -3,6 +3,7 @@ package com.alura.literalura.model;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "libros")
@@ -12,7 +13,7 @@ public class Libro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String titulo;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "libro_autor",
             joinColumns = @JoinColumn(name = "libro_id"),
@@ -22,19 +23,25 @@ public class Libro {
     private String idioma;
     private Integer numeroDeDescargas;
 
-    public Libro(DatosLibro datosLibro) {
-        this.titulo = datosLibro.titulo();
-        this.autores = datosLibro.autores();
-        this.idioma = datosLibro.idioma();
-        this.numeroDeDescargas = datosLibro.numeroDeDescargas();
+    public Libro() {}
+
+    public Libro(String titulo, List<Autor> autores, String idioma, Integer numeroDeDescargas) {
+        this.titulo = titulo;
+        this.autores = autores;
+        this.idioma = idioma;
+        this.numeroDeDescargas = numeroDeDescargas;
     }
 
     @Override
     public String toString() {
-        return "Título: '" + titulo + '\'' +
-                "Autor: '" + autores + '\'' +
-                "Idioma: '" + idioma + '\'' +
-                "Número de descargas: '" + numeroDeDescargas + '\'';
+        return "----------LIBRO----------\n" +
+                "Título: " + titulo + "\n" +
+                "Autor: " + autores.stream()
+                .map(Autor::getNombre)
+                .collect(Collectors.joining(", ")) + "\n" +
+                "Idioma: " + idioma + "\n" +
+                "Número de descargas: " + numeroDeDescargas + "\n" +
+                "++++++++++++++++++++++++++";
     }
 
     public Long getId() {
@@ -53,11 +60,11 @@ public class Libro {
         this.titulo = titulo;
     }
 
-    public List<Autor> getAutor() {
+    public List<Autor> getAutores() {
         return autores;
     }
 
-    public void setAutor(List<Autor> autor) {
+    public void setAutores(List<Autor> autor) {
         this.autores = autor;
     }
 

@@ -11,23 +11,25 @@ public class Autor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String nombre;
     private Integer nacimiento;
     private Integer fallecimiento;
-    private String nombre;
     @ManyToMany(mappedBy = "autores")
     private List<Libro> libros;
 
-    public Autor(DatosAutor datosAutor) {
-        this.nacimiento = datosAutor.nacimiento();
-        this.fallecimiento = datosAutor.fallecimiento();
-        this.nombre = datosAutor.nombre();
+    public Autor() {}
+
+    public Autor(String nombre, Integer nacimiento, Integer fallecimiento) {
+        this.nombre = nombre;
+        this.nacimiento = nacimiento;
+        this.fallecimiento = fallecimiento;
     }
 
     @Override
     public String toString() {
-        return "Nombre:'" + nombre + '\'' +
-                "Fecha de nacimiento: " + nacimiento + '\'' +
-                "Fecha de fallecimiento: " + fallecimiento;
+        return "Nombre: " + nombre +
+                (nacimiento != null ? " (" + nacimiento : "" ) +
+                (fallecimiento != null ? " - " + fallecimiento +")" : ")");
     }
 
     public Long getId() {
